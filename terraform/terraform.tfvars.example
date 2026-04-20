@@ -1,0 +1,12 @@
+# ──────────────────────────────────────────────────────────────
+# terraform.tfvars.example — Template for variable values
+# ──────────────────────────────────────────────────────────────
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is git-ignored for security.
+# ──────────────────────────────────────────────────────────────
+
+aws_region         = "eu-west-1"
+environment        = "dev"
+project_name       = "smartshop"
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["eu-west-1a", "eu-west-1b"]
