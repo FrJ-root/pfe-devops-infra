@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: smartshop-db
+  namespace: smartshop
+spec:
+  serviceName: "smartshop-db-svc"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smartshop-db
+  template:
+    metadata:
+      labels:
+        app: smartshop-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "smartshop"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: smartshop-secrets
+              key: db-username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: smartshop-secrets
+              key: db-password
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smartshop-db-svc
+  namespace: smartshop
+spec:
+  clusterIP: None # Headless service for StatefulSet
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: smartshop-db

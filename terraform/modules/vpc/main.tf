@@ -18,7 +18,7 @@ resource "aws_vpc" "main" {
   tags = {
     Name = "${var.project_name}-${var.environment}-vpc"
     # Required tag for EKS to auto-discover the VPC
-    "kubernetes.io/cluster/${var.project_name}-${var.environment}" = "shared"
+    "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
   }
 }
 
@@ -33,8 +33,8 @@ resource "aws_subnet" "public" {
   tags = {
     Name = "${var.project_name}-${var.environment}-public-${var.availability_zones[count.index]}"
     # EKS tag to discover public subnets for external Application Load Balancers
-    "kubernetes.io/role/elb"                                       = "1"
-    "kubernetes.io/cluster/${var.project_name}-${var.environment}" = "shared"
+    "kubernetes.io/role/elb"                                               = "1"
+    "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
   }
 }
 
@@ -49,8 +49,8 @@ resource "aws_subnet" "private" {
   tags = {
     Name = "${var.project_name}-${var.environment}-private-${var.availability_zones[count.index]}"
     # EKS tag to discover private subnets for internal Load Balancers
-    "kubernetes.io/role/internal-elb"                              = "1"
-    "kubernetes.io/cluster/${var.project_name}-${var.environment}" = "shared"
+    "kubernetes.io/role/internal-elb"                                      = "1"
+    "kubernetes.io/cluster/${var.project_name}-${var.environment}-cluster" = "shared"
   }
 }
 

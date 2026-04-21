@@ -23,3 +23,24 @@ module "eks" {
   private_subnet_ids = module.vpc.private_subnet_ids
   public_subnet_ids  = module.vpc.public_subnet_ids
 }
+
+module "sqs" {
+  source = "./modules/sqs"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+module "ecr" {
+  source = "./modules/ecr"
+
+  project_name = var.project_name
+  environment  = var.environment
+}

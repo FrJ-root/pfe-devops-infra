@@ -34,7 +34,7 @@ resource "aws_eks_node_group" "main" {
   subnet_ids = var.private_subnet_ids
 
   capacity_type  = "ON_DEMAND"
-  instance_types = ["t3.medium"] # t3.medium has 2 vCPU, 4GB RAM — good for basic Spring/React workloads
+  instance_types = ["t3.small"] # t3.small — Free Tier eligible (2 vCPU, 2GB RAM)
 
   scaling_config {
     desired_size = 2

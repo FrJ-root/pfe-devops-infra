@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smartshop-backend-config
+  namespace: smartshop
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  # URL uses the DNS name of the headless service created in 02-postgres.yaml
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://smartshop-db-svc.smartshop.svc.cluster.local:5432/smartshop"
+  # SQS queue name for any beans that need just the name
+  SQS_QUEUE_NAME: "smartshop-dev-queue"
