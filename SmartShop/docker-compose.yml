@@ -1,0 +1,39 @@
+services:
+
+  smartshop-api:
+    build: .
+    container_name: smartshop-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - smartshop-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://smartshop-db:5432/smartshop
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+
+  smartshop-db:
+    image: postgres:15
+    container_name: smartshop-db
+    environment:
+      POSTGRES_DB: smartshop
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: smartshop-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@smartshop.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - smartshop-db
+
+volumes:
+  db-data:

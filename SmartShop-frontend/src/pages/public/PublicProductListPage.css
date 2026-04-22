@@ -1,0 +1,192 @@
+.public-products-page {
+    padding: var(--spacing-3xl) var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.products-header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.products-header h1 {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.search-bar-wrapper {
+    max-width: 600px;
+    margin: var(--spacing-xl) auto 0;
+}
+
+.search-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(58, 110, 242, 0.1);
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-4xl);
+}
+
+.product-card {
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 0 !important;
+    /* Override default Card padding */
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.product-image {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-bg);
+    color: var(--text-muted);
+}
+
+/* Mock Image Backgrounds */
+.bg-blue-100 {
+    background-color: #dbeafe;
+    color: #3b82f6;
+}
+
+.bg-green-100 {
+    background-color: #dcfce7;
+    color: #22c55e;
+}
+
+.bg-purple-100 {
+    background-color: #f3e8ff;
+    color: #a855f7;
+}
+
+.bg-red-100 {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.bg-yellow-100 {
+    background-color: #fef9c3;
+    color: #eab308;
+}
+
+.bg-indigo-100 {
+    background-color: #e0e7ff;
+    color: #6366f1;
+}
+
+.product-info {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.product-category {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.product-price {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.product-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+}
+
+.product-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    flex-grow: 1;
+}
+
+.view-btn {
+    margin-top: auto;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+/* CTA Section */
+.cta-section {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cta-card {
+    padding: var(--spacing-3xl);
+    background: var(--surface-bg);
+    border: 1px dashed var(--border-color);
+}
+
+.cta-card h2 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}

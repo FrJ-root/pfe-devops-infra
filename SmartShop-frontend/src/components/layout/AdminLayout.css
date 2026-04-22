@@ -1,0 +1,120 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-secondary);
+}
+
+.admin-content-wrapper {
+    flex: 1;
+    margin-left: 260px;
+    /* Match sidebar width */
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 260px);
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Adjust when sidebar is collapsed (handled via JS context ideally, but CSS class on body/wrapper could work) */
+/* For simplicity in this iteration, we assume fixed width or need a context to toggle class on wrapper */
+
+.admin-header {
+    height: 70px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-2xl);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+}
+
+.icon-btn {
+    position: relative;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.icon-btn:hover {
+    color: var(--primary);
+}
+
+.badge-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: var(--danger);
+    border-radius: 50%;
+    border: 1px solid var(--card-bg);
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    transition: background 0.2s;
+    cursor: default;
+}
+
+.user-profile-header:hover {
+    background: var(--bg-hover);
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.user-info-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info-header .name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.user-info-header .role {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+}
+
+.admin-main {
+    padding: var(--spacing-2xl);
+    flex: 1;
+    overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+    .admin-content-wrapper {
+        margin-left: 80px;
+        /* Collapsed width default on smaller screens if implemented */
+        width: calc(100% - 80px);
+    }
+}

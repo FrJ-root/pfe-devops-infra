@@ -1,0 +1,133 @@
+.about-page {
+    padding: var(--spacing-3xl) var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4xl);
+}
+
+/* Mission Section */
+.mission-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: center;
+}
+
+.mission-card {
+    padding: var(--spacing-2xl);
+    border-left: 4px solid var(--primary);
+}
+
+.icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: rgba(58, 110, 242, 0.1);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 300px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.gradient-1 {
+    background: linear-gradient(135deg, #e0f2fe 0%, #3b82f6 100%);
+    opacity: 0.2;
+}
+
+.gradient-2 {
+    background: linear-gradient(135deg, #fce7f3 0%, #ec4899 100%);
+    opacity: 0.2;
+}
+
+/* Values Grid */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
+    text-align: center;
+    background: var(--surface-bg);
+    padding: var(--spacing-3xl) var(--spacing-xl);
+    border-radius: var(--radius-2xl);
+}
+
+.value-item {
+    padding: var(--spacing-lg);
+}
+
+.value-icon {
+    color: var(--primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.value-item h3 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.value-item p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Story Section */
+.story-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: center;
+}
+
+.story-card {
+    padding: var(--spacing-2xl);
+}
+
+.story-card p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+
+    .mission-section,
+    .story-section {
+        grid-template-columns: 1fr;
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .story-section .image-placeholder {
+        order: -1;
+    }
+}

@@ -1,0 +1,276 @@
+.profile-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.profile-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+    margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: fit-content;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-avatar svg {
+    color: #667eea;
+}
+
+.profile-card h2 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin: 0 0 1rem;
+}
+
+.profile-info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #718096;
+    margin-bottom: 1.5rem;
+}
+
+.tier-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: auto;
+}
+
+.tier-basic {
+    background: rgba(160, 174, 192, 0.2);
+    color: #4a5568;
+}
+
+.tier-silver {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.3) 0%, rgba(192, 192, 192, 0.1) 100%);
+    color: #718096;
+    border: 2px solid #a0aec0;
+}
+
+.tier-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%);
+    color: #b7791f;
+    border: 2px solid #d69e2e;
+}
+
+.tier-platinum {
+    background: linear-gradient(135deg, rgba(229, 228, 226, 0.5) 0%, rgba(138, 157, 179, 0.3) 100%);
+    color: #2d3748;
+    border: 2px solid #4a5568;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stats-card,
+.loyalty-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card h3,
+.loyalty-card h3 {
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stats-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.stat-icon.orders {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-icon.spending {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.stat-label {
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+.loyalty-card {
+    grid-column: span 2;
+}
+
+.loyalty-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.loyalty-text {
+    font-size: 1.125rem;
+    color: #4a5568;
+    margin: 0;
+}
+
+.loyalty-benefits,
+.tier-progression {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.loyalty-benefits h4,
+.tier-progression h4 {
+    margin: 0 0 1rem;
+    color: #2d3748;
+    font-size: 1.125rem;
+}
+
+.loyalty-benefits ul,
+.tier-progression ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.loyalty-benefits li,
+.tier-progression li {
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+.loyalty-benefits li strong,
+.tier-progression li strong {
+    color: #667eea;
+}
+
+.profile-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    background: rgba(245, 101, 101, 0.1);
+    border: 1px solid #f56565;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-message p {
+    color: #e53e3e;
+    font-weight: 600;
+    margin: 0;
+}
+
+@media (max-width: 1024px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .loyalty-card {
+        grid-column: span 1;
+    }
+}

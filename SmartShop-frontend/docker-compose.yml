@@ -1,0 +1,19 @@
+services:
+  smartshop-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartshop-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - smartshop-network
+
+# Network to connect with backend
+networks:
+  smartshop-network:
+    external: true
+    name: smartshop_default

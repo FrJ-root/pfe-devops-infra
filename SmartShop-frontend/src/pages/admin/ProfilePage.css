@@ -1,0 +1,185 @@
+.profile-page {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.profile-header-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-2xl);
+    border: 1px solid var(--border-color);
+}
+
+.profile-cover {
+    height: 150px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    opacity: 0.8;
+}
+
+.profile-avatar-wrapper {
+    position: absolute;
+    top: 100px;
+    /* 150px cover height - 50px (half avatar) */
+    left: var(--spacing-2xl);
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 4px solid var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-md);
+}
+
+.camera-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: 2px solid var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.camera-btn:hover {
+    transform: scale(1.1);
+}
+
+.profile-identity {
+    padding: var(--spacing-xl) var(--spacing-2xl) var(--spacing-xl) 140px;
+    /* Space for avatar */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.profile-identity h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.role-badge {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.role-badge.admin {
+    background: rgba(58, 110, 242, 0.1);
+    color: var(--primary);
+}
+
+.role-badge.client {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: var(--spacing-xl);
+}
+
+.info-card {
+    padding: var(--spacing-lg);
+}
+
+.info-card h3 {
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.card-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.card-header h3 {
+    margin-bottom: var(--spacing-xs);
+}
+
+.card-header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+.divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: var(--spacing-xl) 0;
+}
+
+h4 {
+    margin-bottom: var(--spacing-lg);
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.form-actions {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-identity {
+        padding-left: var(--spacing-lg);
+        padding-top: 60px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-avatar-wrapper {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .role-badge {
+        align-self: center;
+    }
+}
