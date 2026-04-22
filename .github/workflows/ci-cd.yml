@@ -13,6 +13,8 @@ env:
   FRONTEND_ECR_REPOSITORY: smartshop-frontend
   BACKEND_ECR_REPOSITORY: smartshop-backend
   EKS_CLUSTER_NAME: smartshop-dev-cluster
+  BACKEND_DIR: SmartShop
+  FRONTEND_DIR: SmartShop-frontend
 
 jobs:
   build-and-push:
@@ -30,8 +32,14 @@ jobs:
 
       - name: Run Backend Unit Tests (Partie 6 Test Unitaires)
         run: |
-          cd SmartShop
+          cd "${{ env.BACKEND_DIR }}"
           mvn test
+
+      - name: Debug workspace
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 2 -type d -print
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -50,7 +58,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and push it to ECR so that it can be deployed to EKS.
-          cd SmartShop
+          cd "${{ env.BACKEND_DIR }}"
           docker build -t $ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG
 
@@ -60,7 +68,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and push it to ECR
-          cd SmartShop-frontend
+          cd "${{ env.FRONTEND_DIR }}"
           docker build -t $ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG
 
@@ -92,7 +100,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # The k8s manifests should be applied to ensure infrastructure exists
-          kubectl apply -f pfe-devops-infra/k8s/
+          kubectl apply -f k8s/
           
           # Roll out the new image versions dynamically without changing the actual yaml!
           kubectl set image deployment/smartshop-backend backend=$ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG -n smartshop
