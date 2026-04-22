@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  smartshop-db:
+    image: postgres:15-alpine
+    container_name: smartshop-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: smartshop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  smartshop-backend:
+    build:
+      context: ../SmartShop
+      dockerfile: Dockerfile
+    container_name: smartshop-backend
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://smartshop-db:5432/smartshop
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      # Local mock endpoint for SQS if using localstack, or disable it
+      - SQS_QUEUE_URL=mock-queue
+    depends_on:
+      - smartshop-db
+
+  smartshop-frontend:
+    build:
+      context: ../SmartShop-frontend
+      dockerfile: Dockerfile
+    container_name: smartshop-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - smartshop-backend
+
+volumes:
+  postgres_data:

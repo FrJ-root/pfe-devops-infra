@@ -1,0 +1,104 @@
+name: SmartShop CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  AWS_REGION: eu-west-1
+  FRONTEND_ECR_REPOSITORY: smartshop-frontend
+  BACKEND_ECR_REPOSITORY: smartshop-backend
+  EKS_CLUSTER_NAME: smartshop-dev-cluster
+
+jobs:
+  build-and-push:
+    name: Build & Push to Amazon ECR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push Backend Image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and push it to ECR so that it can be deployed to EKS.
+          cd SmartShop
+          docker build -t $ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Build, tag, and push Frontend Image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and push it to ECR
+          cd SmartShop-frontend
+          docker build -t $ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG
+
+  deploy-to-eks:
+    name: Deploy to Amazon EKS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Update KubeConfig
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Deploy to EKS
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # The k8s manifests should be applied to ensure infrastructure exists
+          kubectl apply -f pfe-devops-infra/k8s/
+          
+          # Roll out the new image versions dynamically without changing the actual yaml!
+          kubectl set image deployment/smartshop-backend backend=$ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG -n smartshop
+          kubectl set image deployment/smartshop-frontend frontend=$ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG -n smartshop
+
+      - name: Wait for Deployment Rollout
+        id: rollout
+        run: |
+          echo "Waiting for deployments to finish..."
+          kubectl rollout status deployment/smartshop-backend -n smartshop --timeout=120s
+          kubectl rollout status deployment/smartshop-frontend -n smartshop --timeout=120s
+
+      - name: Rollback on Error
+        if: failure()
+        run: |
+          echo "Rollout failed! Automatically reverting to previous stable state..."
+          kubectl rollout undo deployment/smartshop-backend -n smartshop
+          kubectl rollout undo deployment/smartshop-frontend -n smartshop
+          echo "Rollback executed."
+          exit 1
