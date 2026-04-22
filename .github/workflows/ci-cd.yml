@@ -22,6 +22,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Run Backend Unit Tests (Partie 6 Test Unitaires)
+        run: |
+          cd SmartShop
+          mvn test
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
