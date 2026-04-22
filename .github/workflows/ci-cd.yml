@@ -15,7 +15,6 @@ env:
   EKS_CLUSTER_NAME: smartshop-dev-cluster
   BACKEND_DIR: SmartShop
   FRONTEND_DIR: SmartShop-frontend
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build-and-push:
