@@ -157,10 +157,29 @@ sequenceDiagram
     EKS-->>Dev: L'application est mise à jour avec zéro temps d'arrêt !
 ```
 
-## 🛠️ Choix Techniques et Résumé
-- **Infrastructure as Code (Terraform) :** Modulaire, reproductible et state géré via S3/DynamoDB pour permettre la collaboration.
-- **Monitoring (Observabilité) :** Fluent Bit (DaemonSet) capture tous les `/var/log/containers` et les achemine vers CloudWatch Logs via IRSA. Des alarmes CloudWatch sont définies pour envoyer des alertes si les clusters K8s saturent.
-- **Traitement Asynchrone (SQS) :** Le service de facturation Backend délègue le traitement long des données à Amazon SQS via `spring-cloud-aws-starter-sqs` (`@SqsListener`), déchargeant ainsi la charge API synchrone (Pattern Pub/Sub).
+## 🛠️ Documentation Technique Expliquant Nos Choix
+
+Afin de répondre aux exigences d'un environnement de production moderne, cloud-native et hautement disponible, les choix architecturaux suivants ont été effectués :
+
+1. **Infrastructure as Code (Terraform) :**
+   - **Choix :** Terraform a été préféré aux approches manuelles ou à AWS CloudFormation. L'architecture a été conçue de manière modulaire (Modules VPC, EKS, ECR, CloudWatch, SQS).
+   - **Justification :** Le code est reproductible, agnostique (multi-cloud ready), et l'état de l'infrastructure (State) est centralisé et sécurisé via un bucket AWS S3 couplé à une table DynamoDB (pour le State Locking). Cela permet un travail d'équipe sans conflit de modifications.
+
+2. **Orchestrator Kubernetes (Amazon EKS) :**
+   - **Choix :** Le choix s'est porté sur k8s managé (EKS) au lieu de simples instances EC2 ou d'AWS ECS.
+   - **Justification :** EKS réduit considérablement la charge opérationnelle (Control Plane géré par AWS) tout en profitant de l'écosystème open-source K8s. De plus, il garantit la haute disponibilité (Multi-AZ de base) et le passage à l'échelle via le Horizontal Pod Autoscaler (HPA) configuré sur nos Pods Frontend et Backend.
+
+3. **Pipeline CI/CD Sécurisé (GitHub Actions & OIDC) :**
+   - **Choix :** GitHub Actions configuré avec une authentification AWS OpenID Connect (OIDC).
+   - **Justification :** L'approche traditionnelle consistant à stocker les clés IAM AWS long-terme (`AWS_ACCESS_KEY_ID`) dans GitHub est un risque de sécurité majeur en cas de fuite. L'OIDC utilise des rôles IAM assumés de manière temporaire via des identifiants (Jetons JWT), limitant la surface d'attaque ("Least Privilege"). Le workflow inclut également un système de test automatisé et un mécanisme de "Rollback Automatique" en cas de crash lors du déploiement.
+
+4. **Architecture Micro-Services Asynchrone (Amazon SQS) :**
+   - **Choix :** Intégration de files d'attente SQS couplées au Backend Spring Boot.
+   - **Justification :** Au lieu de traiter les paiements/commandes de manière synchrone (bloquant le thread de l'API et augmentant le temps de réponse client), le Backend publie un message dans SQS. Un Worker en arrière-plan consomme ce message. Pour garantir la tolérance aux pannes, une Dead Letter Queue (DLQ) intercepte les messages échoués après 3 tentatives.
+
+5. **Observabilité Centralisée (Fluent Bit & CloudWatch) :**
+   - **Choix :** Déploiement de l'agent AWS Fluent Bit (en DaemonSet) et création d'un CloudWatch Dashboard via Terraform.
+   - **Justification :** Dans une architecture distribuée et conteneurisée, se connecter à chaque pod pour lire ses propres logs est une mauvaise pratique. Fluent Bit capture automatiquement les journaux de tous les conteneurs et les exporte dans un emplacement central (`/smartshop/dev/*`). Des alarmes CPU garantissent que l'équipe Ops est notifiée bien avant la surcharge du système.
 
 ---
 
