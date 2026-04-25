@@ -55,7 +55,6 @@ subjects:
     name: fluent-bit
     namespace: amazon-cloudwatch
 ---
-# Fluent Bit Configuration to send logs to the three Log Groups we created in Terraform
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -73,7 +72,6 @@ data:
         HTTP_Server               On
         HTTP_Listen               0.0.0.0
         HTTP_Port                 2020
-
     [INPUT]
         Name                      tail
         Tag                       kube.*
@@ -83,7 +81,6 @@ data:
         Mem_Buf_Limit             5MB
         Skip_Long_Lines           On
         Refresh_Interval          10
-
     [FILTER]
         Name                      kubernetes
         Match                     kube.*
@@ -95,8 +92,6 @@ data:
         Merge_Log_Key             log_processed
         K8S-Logging.Parser        On
         K8S-Logging.Exclude       Off
-
-    # --- Match backend logs ---
     [OUTPUT]
         Name                      cloudwatch_logs
         Match                     *smartshop-backend*
@@ -104,8 +99,6 @@ data:
         log_group_name            /smartshop/dev/backend
         log_stream_prefix         pod-
         auto_create_group         false
-
-    # --- Match frontend logs ---
     [OUTPUT]
         Name                      cloudwatch_logs
         Match                     *smartshop-frontend*
@@ -113,8 +106,6 @@ data:
         log_group_name            /smartshop/dev/frontend
         log_stream_prefix         pod-
         auto_create_group         false
-
-    # --- Match EKS infrastructure system logs ---
     [OUTPUT]
         Name                      cloudwatch_logs
         Match                     *kube-system*
@@ -122,7 +113,6 @@ data:
         log_group_name            /smartshop/dev/eks
         log_stream_prefix         system-
         auto_create_group         false
-
   parsers.conf: |
     [PARSER]
         Name        docker

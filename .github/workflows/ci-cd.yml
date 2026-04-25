@@ -1,5 +1,4 @@
 name: SmartShop CI/CD Pipeline
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches:
       - main
-
 env:
   AWS_REGION: eu-west-1
   FRONTEND_ECR_REPOSITORY: smartshop-frontend
@@ -16,11 +14,9 @@ env:
   BACKEND_DIR: SmartShop
   FRONTEND_DIR: SmartShop-frontend
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read  # This is required for actions/checkout
-
+  id-token: write
+  contents: read
 jobs:
   build-and-push:
     name: Build & Push to Amazon ECR
@@ -28,54 +24,44 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4.2.2
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4.7.0
         with:
           distribution: 'temurin'
           java-version: '17'
-
       - name: Run Backend Unit Tests (Partie 6 Test Unitaires)
         run: |
           cd "${{ env.BACKEND_DIR }}"
           mvn test || echo "Tests bypassed due to missing CI Database."
-
       - name: Debug workspace
         run: |
           pwd
           ls -la
           find . -maxdepth 2 -type d -print
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
       - name: Build, tag, and push Backend Image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and push it to ECR so that it can be deployed to EKS.
           cd "${{ env.BACKEND_DIR }}"
           docker build -t $ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG
-
       - name: Build, tag, and push Frontend Image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and push it to ECR
           cd "${{ env.FRONTEND_DIR }}"
           docker build -t $ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG
-
   deploy-to-eks:
     name: Deploy to Amazon EKS
     needs: build-and-push
@@ -83,39 +69,30 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4.2.2
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
       - name: Update KubeConfig
         run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-
       - name: Deploy to EKS
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # The k8s manifests should be applied to ensure infrastructure exists
           kubectl apply -f k8s/
-          
-          # Roll out the new image versions dynamically without changing the actual yaml!
           kubectl set image deployment/smartshop-backend backend=$ECR_REGISTRY/$BACKEND_ECR_REPOSITORY:$IMAGE_TAG -n smartshop
           kubectl set image deployment/smartshop-frontend frontend=$ECR_REGISTRY/$FRONTEND_ECR_REPOSITORY:$IMAGE_TAG -n smartshop
-
       - name: Wait for Deployment Rollout
         id: rollout
         run: |
           echo "Waiting for deployments to finish..."
           kubectl rollout status deployment/smartshop-backend -n smartshop --timeout=120s
           kubectl rollout status deployment/smartshop-frontend -n smartshop --timeout=120s
-
       - name: Rollback on Error
         if: failure()
         run: |
