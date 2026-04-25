@@ -1,4 +1,4 @@
-.btn {
+/* .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -9,7 +9,7 @@
     cursor: pointer;
     border: 1px solid transparent;
     white-space: nowrap;
-}
+} */
 
 .btn:disabled {
     cursor: not-allowed;
